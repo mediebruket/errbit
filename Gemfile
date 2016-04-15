@@ -1,16 +1,8 @@
 source 'https://rubygems.org'
 
-RAILS_VERSION = '~> 4.2.5.1'
+RAILS_VERSION = '~> 4.2.5.2'
 
 send :ruby, ENV['GEMFILE_RUBY_VERSION'] if ENV['GEMFILE_RUBY_VERSION']
-
-detected_ruby_version = Gem::Version.new(RUBY_VERSION.dup)
-required_ruby_version = Gem::Version.new('2.1.0') # minimum supported version
-
-if detected_ruby_version < required_ruby_version
-  fail "RUBY_VERSION must be at least #{required_ruby_version}, " \
-       "detected RUBY_VERSION #{RUBY_VERSION}"
-end
 
 gem 'actionmailer', RAILS_VERSION
 gem 'actionpack', RAILS_VERSION
@@ -58,6 +50,8 @@ gem 'flowdock'
 # ---------------------------------------
 # GitHub OAuth
 gem 'omniauth-github'
+# Google OAuth
+gem 'omniauth-google-oauth2'
 
 gem 'ri_cal'
 gem 'yajl-ruby', platform: 'ruby'

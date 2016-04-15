@@ -9,6 +9,7 @@ Rails.application.routes.draw do
   resources :users do
     member do
       delete :unlink_github
+      delete :unlink_google
     end
   end
 
@@ -42,6 +43,7 @@ Rails.application.routes.draw do
         put :resolve
         put :unresolve
         post :create_issue
+        post :close_issue
         delete :unlink_issue
       end
     end
