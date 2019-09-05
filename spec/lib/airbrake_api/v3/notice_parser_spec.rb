@@ -18,6 +18,12 @@ describe AirbrakeApi::V3::NoticeParser do
     end.to raise_error(AirbrakeApi::ParamsError)
   end
 
+  it 'does not raise an error for the optional environment field' do
+    expect do
+      described_class.new('errors' => ['MyError']).report
+    end.not_to raise_error
+  end
+
   it 'parses JSON payload and returns ErrorReport' do
     params = build_params_for('api_v3_request.json', key: app.api_key)
 
@@ -93,10 +99,24 @@ describe AirbrakeApi::V3::NoticeParser do
 
   it 'takes the hostname from the context' do
     parser = described_class.new(
-        'errors'      => ['MyError'],
-        'context'     => { 'hostname' => 'app01.infra.example.com', 'url' => 'http://example.com/some-page' },
-        'environment' => {})
+      'errors'      => ['MyError'],
+      'context'     => { 'hostname' => 'app01.infra.example.com', 'url' => 'http://example.com/some-page' },
+      'environment' => {})
     expect(parser.attributes[:server_environment]['hostname']).to eq('app01.infra.example.com')
+  end
+
+  describe '#user_attributes' do
+    it 'returns a user context hash' do
+      user_hash = { id: 1, name: 'John Doe' }
+      parser = described_class.new('context' => { 'user' => user_hash })
+      expect(parser.send(:user_attributes)).to eq(user_hash)
+    end
+
+    it 'returns a hash for a user context string' do
+      user_string = '[Filtered]'
+      parser = described_class.new('context' => { 'user' => user_string })
+      expect(parser.send(:user_attributes)).to eq(user: user_string)
+    end
   end
 
   def build_params_for(fixture, options = {})

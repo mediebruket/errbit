@@ -1,6 +1,6 @@
 source 'https://rubygems.org'
 
-RAILS_VERSION = '~> 4.2.5.2'
+RAILS_VERSION = '~> 4.2.10'
 
 send :ruby, ENV['GEMFILE_RUBY_VERSION'] if ENV['GEMFILE_RUBY_VERSION']
 
@@ -10,7 +10,7 @@ gem 'railties', RAILS_VERSION
 
 gem 'actionmailer_inline_css'
 gem 'decent_exposure'
-gem 'devise', '~> 3.5.5'
+gem 'devise', '~> 4.4.0'
 gem 'dotenv-rails'
 gem 'draper'
 gem 'errbit_plugin'
@@ -18,8 +18,9 @@ gem 'errbit_github_plugin'
 gem 'font-awesome-rails'
 gem 'haml'
 gem 'htmlentities'
-gem 'kaminari', '>= 0.16.3'
-gem 'mongoid', '5.0.2'
+gem 'kaminari'
+gem 'kaminari-mongoid'
+gem 'mongoid', '~> 5.4'
 gem 'mongoid_rails_migrations'
 gem 'rack-ssl', require: 'rack/ssl' # force SSL
 gem 'rack-ssl-enforcer', require: false
@@ -79,14 +80,15 @@ group :development do
 end
 
 group :test do
-  gem 'rspec', '~> 3.3'
-  gem 'rspec-rails', '~> 3.0', require: false
+  gem 'rake'
+  gem 'rspec'
+  gem 'rspec-rails', require: false
   gem 'rspec-activemodel-mocks'
-  gem 'rspec-its'
-  gem 'mongoid-rspec', '~> 3.0.0', require: false
+  gem 'mongoid-rspec', require: false
   gem 'fabrication'
   gem 'capybara'
   gem 'poltergeist'
+  gem 'phantomjs'
   gem 'launchy'
   gem 'email_spec'
   gem 'timecop'
@@ -97,15 +99,18 @@ group :heroku, :production do
   gem 'rails_12factor', require: ENV.key?("HEROKU")
 end
 
+group :no_docker, :test, :development do
+  gem 'therubyracer', platform: :ruby # C Ruby (MRI) or Rubinius, but NOT Windows
+end
+
 gem 'puma'
-gem 'therubyracer', platform: :ruby # C Ruby (MRI) or Rubinius, but NOT Windows
 gem 'sass-rails'
 gem 'uglifier'
-# We can't upgrade because not compatible to jquery >= 1.9.
-# To do that, we need fix the rails.js
-gem 'jquery-rails', '~> 2.1.4'
+gem 'jquery-rails'
 gem 'pjax_rails'
 gem 'underscore-rails'
+
+gem 'sucker_punch'
 
 ENV['USER_GEMFILE'] ||= './UserGemfile'
 eval_gemfile ENV['USER_GEMFILE'] if File.exist?(ENV['USER_GEMFILE'])
